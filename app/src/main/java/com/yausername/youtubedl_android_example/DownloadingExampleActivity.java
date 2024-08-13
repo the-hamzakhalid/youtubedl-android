@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
 import com.yausername.youtubedl_android.YoutubeDL;
 import com.yausername.youtubedl_android.YoutubeDLRequest;
@@ -49,7 +48,7 @@ public class DownloadingExampleActivity extends AppCompatActivity implements Vie
     private String processId = "MyDlProcess";
 
 
-    private final Function3<Float, Long, String, Unit> callback = new Function3<Float, Long, String, Unit>() {
+    private final Function3< Float, Long, String, Unit > callback = new Function3< Float, Long, String, Unit >() {
         @Override
         public Unit invoke(Float progress, Long o2, String line) {
             runOnUiThread(() -> {
@@ -181,16 +180,17 @@ public class DownloadingExampleActivity extends AppCompatActivity implements Vie
     }
 
     public boolean isStoragePermissionGranted() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                return true;
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(Manifest.permission.READ_MEDIA_VIDEO) == PackageManager.PERMISSION_DENIED) {
+                requestPermissions(new String[]{Manifest.permission.READ_MEDIA_VIDEO}, 1);
                 return false;
             }
-        } else {
-            return true;
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
         }
+        return true;
     }
 }
